@@ -3,13 +3,14 @@ import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
 import { AntDesign } from '@expo/vector-icons';
+import Colors from '../constants/Colors';
+
 
 // * Home screen views.
 import Home from '../screens/Home';
 
 //* User screen views.
 import User from '../screens/User';
-import Colors from '../components/Colors';
 
 const defaultStackNavOptions = {
   headerStyle: {

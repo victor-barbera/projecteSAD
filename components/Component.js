@@ -1,0 +1,1 @@
+/* He creat el component ja que sino no hem feia push del directori. */
