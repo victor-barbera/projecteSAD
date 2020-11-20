@@ -5,6 +5,8 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { AntDesign } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 
+// * Home screen views.
+import Invitations from '../screens/Invitations';
 
 // * Home screen views.
 import Home from '../screens/Home';
@@ -20,14 +22,18 @@ const defaultStackNavOptions = {
   headerTitleStyle: {
     fontWeight: 'bold',
   },
+  
 };
 
 // * Stack Navigators.
 const HomeScreenNavigator = createStackNavigator(
   {
     Home: Home,
+    Invitations: Invitations
   },
-  {defaultNavigationOptions: defaultStackNavOptions}
+  {
+    defaultNavigationOptions: defaultStackNavOptions
+  }
 );
 
 const UserScreenNavigator = createStackNavigator(
@@ -35,6 +41,15 @@ const UserScreenNavigator = createStackNavigator(
     User: User,
   },
   {defaultNavigationOptions: defaultStackNavOptions}
+);
+  const NotNavigator = createStackNavigator(
+  {
+    Invitations: Invitations,
+    Home: Home
+  },
+  {
+    defaultNavigationOptions: defaultStackNavOptions
+  }
 );
 
 // * Bottom Navigator.
@@ -44,7 +59,7 @@ const BottomNavigator = createBottomTabNavigator(
       screen: HomeScreenNavigator,
       navigationOptions: {
         tabBarIcon: tabInfo => {
-          return <AntDesign name="home" size={26} />;
+          return <AntDesign name="home" size={26} color={Colors.accentColor}/>;
         },
       },
     },
@@ -52,7 +67,7 @@ const BottomNavigator = createBottomTabNavigator(
       screen: UserScreenNavigator,
       navigationOptions: {
         tabBarIcon: tabInfo => {
-          return <AntDesign name="user" size={26} />;
+          return <AntDesign name="user" size={26} color={Colors.accentColor}/>;
         },
       },
     },
@@ -60,6 +75,7 @@ const BottomNavigator = createBottomTabNavigator(
   {
     tabBarOptions: {
       activeTintColor: Colors.accentColor,
+      inactiveTintColor: 'black',
       style: {
         backgroundColor: Colors.primaryColor,
       },
