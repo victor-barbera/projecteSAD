@@ -10,22 +10,29 @@ import {
 import DefaultText from './DefaultText';
 import Colors from '../constants/Colors';
 
-const MeetingItem = props => {
+const InvitationItem = props => {
   return (
     <View style={styles.meetingItem}>
       <TouchableOpacity 
               onLongPress={() => {
                 Alert.alert(
-                  'Delete',
-                  'You are about to delete this meeting',
+                  'Confirm meeting',
+                  'Choose go to select your disponibility',
                   [{
-                    text: 'Delete', 
+                    text: 'Go', //aqui sha de obrir el modal per respondre
+                    style: 'clear',
+                    onPress: () => console.log("accept meeting")
+                  },
+                  {
+                    text: 'Decline', 
                     style: 'destructive', 
                     onPress: () => console.log("delete meeting")},
                   {
                     text: 'Cancel', 
-                    style: 'clear',
-                    onPress: () => console.log("cancel")}],
+                    style: 'cancel',
+                    onPress: () => console.log("cancel")
+                  },
+                  ],
                 );
             }}
             >
@@ -37,6 +44,9 @@ const MeetingItem = props => {
           </View>
           <View style={styles.status}>
             <Text style={{color: Colors.primaryColor}}>
+              From: <Text style={{fontFamily: 'open-sans-bold'}}>{props.admin}</Text> 
+            </Text>
+            <Text style={{fontFamily: 'open-sans-bold',color: Colors.primaryColor}}>
               {props.status}
             </Text>
           </View>
@@ -77,10 +87,11 @@ const styles = StyleSheet.create({
     color: Colors.accentColor,
   },
   status: {
-    alignItems: 'flex-end',
-    paddingBottom: 10,
+    paddingBottom: 5,
+    justifyContent: 'space-between',
     paddingHorizontal: 10,
+    flexDirection: 'row',
   }
 });
 
-export default MeetingItem;
+export default InvitationItem;

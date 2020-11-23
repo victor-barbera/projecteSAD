@@ -2,16 +2,17 @@ import React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import Colors from '../constants/Colors';
 
-import MeetingItem from './MeetingItem';
+import InvitationItem from './InvitationItem';
 
-const MeetingList = props => {
+const InvitationList = props => {
     const renderMeetingItem = itemData => {
         return (
-        <MeetingItem
+        <InvitationItem
             title={itemData.item.title}
             day={itemData.item.day}
             hour={itemData.item.hour}
             status={itemData.item.status}
+            admin={itemData.item.admin}
       />
     );
   };
@@ -38,4 +39,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default MeetingList;
+export default InvitationList;

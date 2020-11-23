@@ -42,15 +42,6 @@ const UserScreenNavigator = createStackNavigator(
   },
   {defaultNavigationOptions: defaultStackNavOptions}
 );
-  const NotNavigator = createStackNavigator(
-  {
-    Invitations: Invitations,
-    Home: Home
-  },
-  {
-    defaultNavigationOptions: defaultStackNavOptions
-  }
-);
 
 // * Bottom Navigator.
 const BottomNavigator = createBottomTabNavigator(
@@ -60,7 +51,7 @@ const BottomNavigator = createBottomTabNavigator(
       navigationOptions: {
         tabBarIcon: tabInfo => {
           return <AntDesign name="home" size={26} color={Colors.accentColor}/>;
-        },
+        },  
       },
     },
     User: {

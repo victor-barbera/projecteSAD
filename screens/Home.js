@@ -23,7 +23,7 @@ Home.navigationOptions = navigationData => {
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Invitations"
-          iconName="ios-notifications"
+          iconName="ios-notifications-outline"
           color={Colors.accentColor}
           onPress={() => {
             navigationData.navigation.navigate({
