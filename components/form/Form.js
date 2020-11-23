@@ -10,7 +10,7 @@ import {
 import FormButton from './FormButton';
 import FormStepIndicator from './FormStepIndicator';
 import { useForm, Controller } from 'react-hook-form';
-import Colors from '../constants/Colors';
+import Colors from '../../constants/Colors';
 
 const windowWidth = Dimensions.get('window').width;
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import Colors from '../constants/Colors';
 
 
 const FormButton = props => {

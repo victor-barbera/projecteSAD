@@ -1,7 +1,3 @@
-import * as firebase from 'firebase';
-import '@firebase/auth';
-import '@firebase/firestore';
-
 const firebaseConfig = {
   apiKey: 'AIzaSyBp2NZuqLCYwJCUISJSmDNfoVfHzd3UaOo',
   authDomain: 'syncrocalendars.firebaseapp.com',
@@ -13,8 +9,4 @@ const firebaseConfig = {
   measurementId: 'G-60WKEF0SKE',
 };
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
-
-export default firebase;
+export default firebaseConfig;

@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import Modal from 'react-native-modal';
 import Colors from '../constants/Colors';
-import Form from './Form';
+import Form from './form/Form';
 
 const windowHeight = Dimensions.get('window').height;
 

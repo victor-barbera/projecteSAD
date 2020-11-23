@@ -3,17 +3,15 @@ import {
   Text,
   View,
   Button,
-  TextInput,
   StyleSheet,
-  Dimensions,
 } from 'react-native';
-import FormButton from '../components/FormButton';
 import { useForm, Controller } from 'react-hook-form';
+import FormInput from '../components/form/FormInput';
+import FormButton from '../components/form/FormButton';
 import { useAppContext } from '../Lib/Context';
-import Colors from '../constants/Colors';
-import firebase from '../firebase/config';
+import firebaseConfig from '../firebase/config';
 
-const windowWidth = Dimensions.get('window').width;
+const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const SignupScreen = props => {
   const { setUserId } = useAppContext();
@@ -21,7 +19,7 @@ const SignupScreen = props => {
   const { control, handleSubmit, errors } = useForm();
   const onSubmit = async data => {
     const authRes = await fetch(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBp2NZuqLCYwJCUISJSmDNfoVfHzd3UaOo',
+      `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${firebaseConfig.apiKey}`,
       {
         method: 'POST',
         headers: {
@@ -43,7 +41,7 @@ const SignupScreen = props => {
         setErrorMsg('Too many attempts, try later...👻');
     } else if (authResData.localId) {
       const rtdbRes = await fetch(
-        `https://syncrocalendars.firebaseio.com/users/${authResData.localId}.json`,
+        `${firebaseConfig.databaseURL}/users/${authResData.localId}.json`,
         {
           method: 'PUT',
           headers: {
@@ -71,77 +69,93 @@ const SignupScreen = props => {
         <Text style={styles.label}>Email</Text>
         <Controller
           control={control}
-          render={({ onChange, onBlur, value }) => (
-            <TextInput
-              style={styles.input}
-              onBlur={onBlur}
+          name="email"
+          rules={{
+            required: { value: true, message: 'Email is required' },
+            pattern: { value: EMAIL_REGEX, message: 'Not a valid email' },
+          }}
+          defaultValue=""
+          render={({ onChange, value }) => (
+            <FormInput
               onChangeText={value => onChange(value)}
               value={value}
-              placeholder='"email@example.com"'
+              placeholder='e.g. "email@example.com"'
               autoCapitalize="none"
             />
           )}
-          name="email"
-          rules={{ required: true }}
-          defaultValue=""
         />
-        {errors.firstName && <Text>This is required.</Text>}
+        {errors.email && (
+          <Text style={{ color: 'red' }}>{errors.email.message}</Text>
+        )}
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Password</Text>
         <Controller
           control={control}
-          render={({ onChange, onBlur, value }) => (
-            <TextInput
-              style={styles.input}
-              onBlur={onBlur}
+          name="password"
+          rules={{
+            required: { value: true, message: 'Password required' },
+            minLength: {
+              value: 8,
+              message: 'Password must be 8 characters length',
+            },
+          }}
+          defaultValue=""
+          render={({ onChange, value }) => (
+            <FormInput
               onChangeText={value => onChange(value)}
               value={value}
-              placeholder=""
+              placeholder="Write yoy password"
               autoCapitalize="none"
               secureTextEntry
             />
           )}
-          name="password"
-          rules={{ required: true }}
-          defaultValue=""
         />
+        {errors.password && (
+          <Text style={{ color: 'red' }}>{errors.password.message}</Text>
+        )}
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Name</Text>
         <Controller
           control={control}
-          render={({ onChange, onBlur, value }) => (
-            <TextInput
-              style={styles.input}
-              onBlur={onBlur}
+          name="name"
+          rules={{
+            required: { value: true, message: 'Name is required' },
+          }}
+          defaultValue=""
+          render={({ onChange, value }) => (
+            <FormInput
               onChangeText={value => onChange(value)}
               value={value}
-              placeholder=""
+              placeholder='Write your first name'
             />
           )}
-          name="name"
-          rules={{ required: true }}
-          defaultValue=""
         />
+        {errors.name && (
+          <Text style={{ color: 'red' }}>{errors.name.message}</Text>
+        )}
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Surname</Text>
         <Controller
           control={control}
-          render={({ onChange, onBlur, value }) => (
-            <TextInput
-              style={styles.input}
-              onBlur={onBlur}
+          name="surname"
+          rules={{
+            required: { value: true, message: 'Surname is required' },
+          }}
+          defaultValue=""
+          render={({ onChange, value }) => (
+            <FormInput
               onChangeText={value => onChange(value)}
               value={value}
-              placeholder=""
+              placeholder='Write your second name'
             />
           )}
-          name="surname"
-          rules={{ required: true }}
-          defaultValue=""
         />
+        {errors.surname && (
+          <Text style={{ color: 'red' }}>{errors.surname.message}</Text>
+        )}
       </View>
       <FormButton label="Sign up" onPress={handleSubmit(onSubmit)} />
       <Text>Do you already have an account?</Text>
@@ -158,18 +172,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '400',
     marginBottom: 10,
-  },
-  input: {
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: Colors.accentColor,
-    borderRadius: 6,
-    width: windowWidth * 0.8,
-    fontSize: 20,
-    paddingHorizontal: 13,
-    paddingTop: 8,
-    paddingBottom: 6,
-    // backgroundColor: '#FFFFFF',
   },
   inputContainer: {
     margin: 10,
