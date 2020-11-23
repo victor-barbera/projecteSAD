@@ -1,5 +1,5 @@
 import React from 'react';
-import { createAppContainer } from 'react-navigation';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
 import { AntDesign } from '@expo/vector-icons';
@@ -15,6 +15,10 @@ import User from '../screens/User';
 import Sync from '../screens/Sync';
 import SyncButton from '../components/SyncButton';
 
+// * Auth views
+// import LoadingScreen from '../screens/LoadingScreen';
+import SignupScreen from '../screens/SignupScreen';
+import SigninScreen from '../screens/SigninScreen';
 
 const defaultStackNavOptions = {
   headerStyle: {
@@ -79,4 +83,15 @@ const BottomNavigator = createBottomTabNavigator(
   }
 );
 
-export default createAppContainer(BottomNavigator);
+const AuthNavigator = createSwitchNavigator({
+  // Loading: LoadingScreen,
+  SignUp: SignupScreen,
+  SignIn: SigninScreen,
+});
+
+const GeneralNavigator = createSwitchNavigator({
+  Auth: AuthNavigator,
+  App: BottomNavigator,
+});
+
+export default createAppContainer(GeneralNavigator);

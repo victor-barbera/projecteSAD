@@ -1,16 +1,19 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
 import AppNavigator from './navigation/AppNavigator';
+import { firebase } from './firebase/config';
+import { AppContext } from './Lib/Context';
 
 export default function App() {
-  return <AppNavigator />;
+  const [userId, setUserId] = useState('');
+  return (
+    <AppContext.Provider
+      value={{
+        userId,
+        setUserId
+      }}
+    >
+      <AppNavigator />
+    </AppContext.Provider>
+  );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
