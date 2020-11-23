@@ -4,6 +4,8 @@ import { useForm, Controller } from 'react-hook-form';
 import FormInput from '../components/form/FormInput';
 import FormButton from '../components/form/FormButton';
 import { useAppContext } from '../Lib/Context';
+import firebaseConfig from '../firebase/config';
+
 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -14,7 +16,7 @@ const SigninScreen = props => {
   const onSubmit = async data => {
     console.log(data);
     const response = await fetch(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBp2NZuqLCYwJCUISJSmDNfoVfHzd3UaOo',
+      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${firebaseConfig.apiKey}`,
       {
         method: 'POST',
         headers: {
