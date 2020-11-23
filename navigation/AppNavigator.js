@@ -5,12 +5,16 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { AntDesign } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 
-
 // * Home screen views.
 import Home from '../screens/Home';
 
-//* User screen views.
+// * User screen views.
 import User from '../screens/User';
+
+// * Sync modal views.
+import Sync from '../screens/Sync';
+import SyncButton from '../components/SyncButton';
+
 
 const defaultStackNavOptions = {
   headerStyle: {
@@ -47,6 +51,14 @@ const BottomNavigator = createBottomTabNavigator(
           return <AntDesign name="home" size={26} />;
         },
       },
+    },
+    Sync: {
+      screen: Sync,
+      navigationOptions: {
+        tabBarButtonComponent: tabInfo => {
+          return <SyncButton />;
+        },
+      }
     },
     User: {
       screen: UserScreenNavigator,
