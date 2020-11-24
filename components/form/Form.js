@@ -1,150 +1,200 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
-  TextInput,
-  ScrollView,
   StyleSheet,
-  Dimensions,
+  Button,
+  Image,
 } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
+import FormInput from './FormInput';
 import FormButton from './FormButton';
 import FormStepIndicator from './FormStepIndicator';
-import { useForm, Controller } from 'react-hook-form';
-import Colors from '../../constants/Colors';
+import { useAppContext } from '../../Lib/Context';
+import firebaseConfig from '../../firebase/config';
 
-const windowWidth = Dimensions.get('window').width;
 
 const Form = props => {
   const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({});
   const { control, handleSubmit, errors } = useForm();
-  const carousel = useRef(null);
+  const { user } = useAppContext();
   const onSubmit = data => {
-    console.log(data);
-    setStep(2);
-    carousel.current.scrollTo({x: windowWidth})
-  }
+    setStep(step + 1);
+    if (step === 1) setFormData({ ...formData, ...data });
+    else sendSyncRequest({ ...formData, ...data });
+  };
+
+  const sendSyncRequest = async data => {
+    const res = await fetch(
+      `${firebaseConfig.databaseURL}/requests.json`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sender: `${user.name} ${user.surname}`,
+          receiver: data.contact,
+          concept: data.concept,
+          availableDays: data.availableDays,
+          status: 'pending',
+        }),
+      }
+    );
+    if (res.ok) {
+      const response = await res.json();
+      const destRes = await fetch(
+        `${firebaseConfig.databaseURL}/users/ejrilUrgj0VUgE6qcLLYYhTtW5h1/requests.json`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            syncId: response.name,
+          }),
+        }
+      );
+      const sourceRes = await fetch(
+        `${firebaseConfig.databaseURL}/users/${user.id}/requests.json`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            syncId: response.name,
+          }),
+        }
+      );
+    }
+  };
 
   return (
     <>
-      <ScrollView
-        horizontal={true}
-        pagingEnabled={true}
-        showsHorizontalScrollIndicator={false}
-        ref={carousel}
-      >
-        <View style={styles.formContainer}>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Choose a contact</Text>
-            <Controller
-              control={control}
-              render={({ onChange, onBlur, value }) => (
-                <TextInput
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={value => onChange(value)}
-                  value={value}
-                  placeholder="Name or username"
-                />
+      <View style={styles.formContainer}>
+        {step === 1 && (
+          <>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Choose a contact</Text>
+              <Controller
+                control={control}
+                name="contact"
+                rules={{
+                  required: { value: true, message: 'A user is required' },
+                }}
+                defaultValue=""
+                render={({ onChange, value }) => (
+                  <FormInput
+                    onChangeText={value => onChange(value)}
+                    value={value}
+                    placeholder="Name or email"
+                    autoCapitalize="none"
+                  />
+                )}
+              />
+              {errors.contact && (
+                <Text style={{ color: 'red' }}>{errors.contact.message}</Text>
               )}
-              name="contact"
-              rules={{ required: true }}
-              defaultValue=""
-            />
-            {errors.firstName && <Text>This is required.</Text>}
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Concept</Text>
-            <Controller
-              control={control}
-              render={({ onChange, onBlur, value }) => (
-                <TextInput
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={value => onChange(value)}
-                  value={value}
-                  placeholder="What are you going to do"
-                />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Concept</Text>
+              <Controller
+                control={control}
+                rules={{
+                  required: { value: true, message: 'A concept is required' },
+                }}
+                name="concept"
+                defaultValue=""
+                render={({ onChange, value }) => (
+                  <FormInput
+                    onChangeText={value => onChange(value)}
+                    value={value}
+                    placeholder="What are you going to do"
+                  />
+                )}
+              />
+              {errors.concept && (
+                <Text style={{ color: 'red' }}>{errors.concept.message}</Text>
               )}
-              name="concept"
-              defaultValue=""
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Time requiered</Text>
-            <Controller
-              control={control}
-              render={({ onChange, onBlur, value }) => (
-                <TextInput
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={value => onChange(value)}
-                  value={value}
-                  placeholder="hh:mm"
-                />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Timing details</Text>
+              <Controller
+                control={control}
+                name="time"
+                defaultValue=""
+                render={({ onChange, value }) => (
+                  <FormInput
+                    onChangeText={value => onChange(value)}
+                    value={value}
+                    placeholder='e.g. "from 9:00pm" "morning"'
+                  />
+                )}
+              />
+            </View>
+          </>
+        )}
+        {step === 2 && (
+          <>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Set your availability (dd/mm)</Text>
+              <Controller
+                control={control}
+                name="availableDays"
+                rules={{
+                  required: {
+                    value: true,
+                    message: 'This field is mandatory!',
+                  },
+                }}
+                defaultValue=""
+                render={({ onChange, value }) => (
+                  <FormInput
+                    onChangeText={value => onChange(value)}
+                    value={value}
+                    placeholder='e.g. "20/11,21/11,26/11"'
+                    autoCapitalize="none"
+                  />
+                )}
+              />
+              {errors.availableDays && (
+                <Text style={{ color: 'red' }}>
+                  {errors.availableDays.message}
+                </Text>
               )}
-              name="minTime"
-              defaultValue=""
+            </View>
+          </>
+        )}
+        {step === 3 && (
+          <>
+            <Text style={styles.label}>
+              The form had been submited succesfully😁
+            </Text>
+            <Image
+              resizeMode="contain"
+              style={{ width: '100%', height: 50 }}
+              source={require('../../assets/3173500.jpg')}
             />
-          </View>
-        </View>
-        <View style={styles.formContainer}>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Choose a contact</Text>
-            <Controller
-              control={control}
-              render={({ onChange, onBlur, value }) => (
-                <TextInput
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={value => onChange(value)}
-                  value={value}
-                  placeholder="Name or username"
-                />
-              )}
-              name="contact"
-              rules={{ required: true }}
-              defaultValue=""
-            />
-            {errors.firstName && <Text>This is required.</Text>}
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Concept</Text>
-            <Controller
-              control={control}
-              render={({ onChange, onBlur, value }) => (
-                <TextInput
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={value => onChange(value)}
-                  value={value}
-                  placeholder="What are you going to do"
-                />
-              )}
-              name="concept"
-              defaultValue=""
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Time requiered</Text>
-            <Controller
-              control={control}
-              render={({ onChange, onBlur, value }) => (
-                <TextInput
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={value => onChange(value)}
-                  value={value}
-                  placeholder="hh:mm"
-                />
-              )}
-              name="minTime"
-              defaultValue=""
-            />
-          </View>
-        </View>
-      </ScrollView>
+          </>
+        )}
+      </View>
       <FormStepIndicator step={step} />
-      <FormButton label="Continue" onPress={handleSubmit(onSubmit)} />
+      {step !== 3 ? (
+        <FormButton
+          label={step === 1 ? 'Continue' : 'Send'}
+          onPress={handleSubmit(onSubmit)}
+        />
+      ) : (
+        <View style={{ margin: 20, marginBottom: 40 }}>
+          <Button
+            title="Close"
+            color="red"
+            onPress={() => props.setModalVisibility(false)}
+          />
+        </View>
+      )}
     </>
   );
 };
@@ -155,24 +205,14 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     marginBottom: 10,
   },
-  input: {
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: Colors.accentColor,
-    borderRadius: 6,
-    width: windowWidth * 0.8,
-    fontSize: 20,
-    paddingHorizontal: 13,
-    paddingTop: 8,
-    paddingBottom: 6,
-    // backgroundColor: '#FFFFFF',
-  },
   inputContainer: {
     margin: 10,
   },
   formContainer: {
     marginBottom: 20,
-    flex:1
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 300,
   },
 });
 

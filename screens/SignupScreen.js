@@ -14,7 +14,7 @@ import firebaseConfig from '../firebase/config';
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const SignupScreen = props => {
-  const { setUserId } = useAppContext();
+  const { setUserId, setUser } = useAppContext();
   const [errorMsg, setErrorMsg] = useState('');
   const { control, handleSubmit, errors } = useForm();
   const onSubmit = async data => {
@@ -50,11 +50,13 @@ const SignupScreen = props => {
           body: JSON.stringify({
             name: data.name,
             surname: data.surname,
+            email: data.email
           }),
         }
       );
       if (rtdbRes.ok) {
         setUserId(authResData.localId);
+        setUser({id: authResData.localId, name: data.name, surname: data.surname, email: data.email});
         props.navigation.navigate('App');
       }
     }

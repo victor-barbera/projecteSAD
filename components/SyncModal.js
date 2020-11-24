@@ -17,7 +17,7 @@ const SyncModal = props => {
     >
       <View style={styles.content}>
         <Text style={styles.contentTitle}>Send a sync🔄 request</Text>
-        <Form />
+        <Form setModalVisibility={props.setVisibility} />
       </View>
     </Modal>
   );

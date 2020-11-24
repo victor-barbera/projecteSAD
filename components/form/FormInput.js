@@ -5,7 +5,6 @@ import Colors from '../../constants/Colors';
 const windowWidth = Dimensions.get('window').width;
 
 const FormInput = props => {
-    console.log(props.errorMsg);
   return (
     <>
       <TextInput style={styles.input} {...props} />
@@ -24,9 +23,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 13,
     paddingTop: 8,
     paddingBottom: 6,
-  },
-  error: {
-    color: 'red',
   },
 });
 

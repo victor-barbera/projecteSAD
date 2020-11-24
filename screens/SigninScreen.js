@@ -6,11 +6,10 @@ import FormButton from '../components/form/FormButton';
 import { useAppContext } from '../Lib/Context';
 import firebaseConfig from '../firebase/config';
 
-
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const SigninScreen = props => {
-  const { setUserId } = useAppContext();
+  const { setUserId, setUser } = useAppContext();
   const { control, handleSubmit, errors } = useForm();
   const [errorMsg, setErrorMsg] = useState('');
   const onSubmit = async data => {
@@ -38,10 +37,22 @@ const SigninScreen = props => {
           'There no accounts with the provided email, try creating one!😉'
         );
     } else if (resData.localId) {
-      setUserId(resData.localId);
-      props.navigation.navigate('App');
+      const userRes = await fetch(
+        `${firebaseConfig.databaseURL}/users/${resData.localId}.json`,
+        { method: 'GET' }
+      );
+      if (userRes.ok) {
+        userData = await userRes.json();
+        setUserId(resData.localId);
+        setUser({
+          id: resData.localId,
+          name: userData.name,
+          surname: userData.surname,
+          email: userData.email,
+        });
+        props.navigation.navigate('App');
+      }
     }
-    console.log(resData);
   };
   return (
     <View style={styles.formContainer}>

@@ -16,7 +16,8 @@ const fetchFonts = () => {
 };
 
 export default function App() {
-  const [userId, setUserId] = useState('');
+  const [userId, setUserId] = useState("");
+  const [user, setUser] = useState({id: "", name: "", surname: "", email: ""});
   const [fontLoaded, setFontLoaded] = useState(false);
   
   if (!fontLoaded) {
@@ -32,7 +33,9 @@ export default function App() {
     <AppContext.Provider
       value={{
         userId,
-        setUserId
+        setUserId,
+        user,
+        setUser
       }}
     >
       <AppNavigator />
