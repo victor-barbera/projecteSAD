@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: Colors.accentColor,
-    //overflow: 'hidden',
+    overflow: 'hidden',
     marginVertical: 3,
   },
   titleContainer: {
