@@ -2,40 +2,22 @@ import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, Button } from 'react-native';
 import DefaultText from '../components/DefaultText';
 import Colors from '../constants/Colors';
-
+import firebaseConfig from '../firebase/config';
 import { useAppContext } from '../Lib/Context';
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from '../components/HeaderButton';
 
 const User = () => {
-  const {userId} = useAppContext();
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [email, setEmail] = useState("");
-  const [contacts, setContacts] = useState([]);
+  const { user, contacts } = useAppContext();
   const [image, setImage] = useState("");
+
 
   const renderContact = ({item}) => (
     <View style={styles.contacts}>
-      <DefaultText>{item}</DefaultText>
+      <DefaultText>{`${item.name} ${item.surname}`}</DefaultText>
     </View>
   );
-  useEffect(()=>{
-    const fetchData = async ()=> {
-    const res = await fetch(
-      `https://quedades.firebaseio.com/users/${userId}.json`,
-      {method: 'GET'}
-    );
-    if(res.ok) {
-      const resData = await res.json();
-      setName(resData.name);
-      setSurname(resData.surname);
-      setEmail(resData.email);
-      setContacts(resData.contacts);
-      setImage(resData.image)
-    }}
-    fetchData();
-  },[userId]);
+
   return (
     <View style={styles.container}>
       <View style={styles.headContainer}>
@@ -43,8 +25,8 @@ const User = () => {
           <Image resizeMode= 'contain' style={styles.image} source={{uri: image}}/>
         </View>
         <View style={styles.personalData}>
-          <Text style={styles.title}>{name} {surname}</Text>
-          <DefaultText >{email}</DefaultText>
+          <Text style={styles.title}>{user.name} {user.surname}</Text>
+          <DefaultText >{user.email}</DefaultText>
         </View>
       </View>
       <View>
@@ -57,7 +39,6 @@ const User = () => {
         <FlatList 
           data={contacts}
           renderItem={renderContact}
-          keyExtractor={item => item}        
         />
       </View>
     </View>

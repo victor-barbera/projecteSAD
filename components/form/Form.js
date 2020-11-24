@@ -18,7 +18,7 @@ const Form = props => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
   const { control, handleSubmit, errors } = useForm();
-  const { user } = useAppContext();
+  const { user, contacts } = useAppContext();
   const onSubmit = data => {
     setStep(step + 1);
     if (step === 1) setFormData({ ...formData, ...data });
@@ -26,6 +26,7 @@ const Form = props => {
   };
 
   const sendSyncRequest = async data => {
+    const contact = contacts.find(contact => contact.email === data.contact || `${contact.name} ${contact.surname}` === data.contact);
     const res = await fetch(
       `${firebaseConfig.databaseURL}/requests.json`,
       {
@@ -35,17 +36,19 @@ const Form = props => {
         },
         body: JSON.stringify({
           sender: `${user.name} ${user.surname}`,
-          receiver: data.contact,
+          receiver: contact.name,
           concept: data.concept,
           availableDays: data.availableDays,
           status: 'pending',
+          time: data.time
         }),
       }
     );
     if (res.ok) {
       const response = await res.json();
       const destRes = await fetch(
-        `${firebaseConfig.databaseURL}/users/ejrilUrgj0VUgE6qcLLYYhTtW5h1/requests.json`,
+
+        `${firebaseConfig.databaseURL}/users/${contact.id}/requests.json`,
         {
           method: 'POST',
           headers: {
