@@ -1,29 +1,29 @@
 import React from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet,Text } from 'react-native';
 import Colors from '../constants/Colors';
 
 import MeetingItem from './MeetingItem';
 
 const MeetingList = props => {
-    const renderMeetingItem = itemData => {
-        return (
-        <MeetingItem
-            title={itemData.item.title}
-            day={itemData.item.day}
-            hour={itemData.item.hour}
-            status={itemData.item.status}
-      />
-    );
-  };
+  const renderMeeting = ({item}) => (
+    <MeetingItem
+    concept={item.concept}
+    senderID={item.senderID}
+    status={item.status}
+    result={item.result}
+    id={item.id}
+  />        
+  );
+        
 
   return (
     <View style={styles.list}>
-      <FlatList
-        data={props.listData}
-        keyExtractor={(item, index) => item.id}
-        renderItem={renderMeetingItem}
-        style={{ width: '100%' }}
-      />
+      <FlatList 
+          data={props.listData}
+          renderItem={renderMeeting}
+          keyExtractor={(item,index) => item.id}  
+          style={{ width: '100%' }}      
+        />
     </View>
   );
 };

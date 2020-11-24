@@ -7,10 +7,10 @@ import {
   Alert
 } from 'react-native';
 
-import DefaultText from './DefaultText';
 import Colors from '../constants/Colors';
 
 const InvitationItem = props => {
+  const results = props.results.join(', ');
   return (
     <View style={styles.meetingItem}>
       <TouchableOpacity 
@@ -30,7 +30,6 @@ const InvitationItem = props => {
                   {
                     text: 'Cancel', 
                     style: 'cancel',
-                    onPress: () => console.log("cancel")
                   },
                   ],
                 );
@@ -39,21 +38,23 @@ const InvitationItem = props => {
         <View>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>
-              {props.title}
+              {props.concept}
             </Text>
           </View>
           <View style={styles.status}>
             <Text style={{color: Colors.primaryColor}}>
-              From: <Text style={{fontFamily: 'open-sans-bold'}}>{props.admin}</Text> 
-            </Text>
-            <Text style={{fontFamily: 'open-sans-bold',color: Colors.primaryColor}}>
-              {props.status}
+              From: <Text style={{fontFamily: 'open-sans-bold'}}>{props.senderID}</Text> 
             </Text>
           </View>
-          <View style={styles.meetingDate}>
-            <DefaultText>{props.day}</DefaultText>
-            <DefaultText style={{alignSelf: 'flex-end'}}>{props.hour}</DefaultText>
-          </View>
+          <TouchableOpacity style={styles.results} onPress={ () => {
+            Alert.alert(
+                  'Days',
+                  results,
+                  [{text: 'Okay', style: 'clear'}],
+                );
+              }}>
+            <Text style={styles.title}>Show days</Text>
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     </View>
@@ -63,18 +64,13 @@ const InvitationItem = props => {
 const styles = StyleSheet.create({
   meetingItem: {
     flex:1,
-    height: 100,
+    height: 110,
     backgroundColor: 'white',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: Colors.accentColor,
-    overflow: 'hidden',
+    //overflow: 'hidden',
     marginVertical: 3,
-  },
-  meetingDate: {
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    flexDirection: 'row',
   },
   titleContainer: {
     height: "50%",
@@ -86,12 +82,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: Colors.accentColor,
   },
-  status: {
-    paddingBottom: 5,
-    justifyContent: 'space-between',
+  results: {
+    alignItems: 'center',
+    backgroundColor: Colors.backColor,
     paddingHorizontal: 10,
+    height: 25
+  },
+  status: {
     flexDirection: 'row',
-  }
+    justifyContent: 'space-between',
+    paddingBottom: 10,
+    paddingHorizontal: 10,
+  },
 });
 
 export default InvitationItem;
