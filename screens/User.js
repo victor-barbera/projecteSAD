@@ -1,48 +1,65 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, Button } from 'react-native';
 import DefaultText from '../components/DefaultText';
 import Colors from '../constants/Colors';
-import { USER } from '../data/dummy-data';
+
+import { useAppContext } from '../Lib/Context';
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from '../components/HeaderButton';
 
 const User = () => {
+  const {userId} = useAppContext();
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [email, setEmail] = useState("");
+  const [contacts, setContacts] = useState([]);
+  const [image, setImage] = useState("");
+
   const renderContact = ({item}) => (
     <View style={styles.contacts}>
       <DefaultText>{item}</DefaultText>
     </View>
   );
- /*const MyUser = USER.filter(
-    user => user.id === 1
-  );*/
+  useEffect(()=>{
+    const fetchData = async ()=> {
+    const res = await fetch(
+      `https://quedades.firebaseio.com/users/${userId}.json`,
+      {method: 'GET'}
+    );
+    if(res.ok) {
+      const resData = await res.json();
+      setName(resData.name);
+      setSurname(resData.surname);
+      setEmail(resData.email);
+      setContacts(resData.contacts);
+      setImage(resData.image)
+    }}
+    fetchData();
+  },[userId]);
   return (
     <View style={styles.container}>
-      {USER.map(user => 
-            <View key={user.id}>
-              <View style={styles.headContainer}>
-                <View style={styles.imageContainer}>
-                  <Image resizeMode= 'contain' style={styles.image} source={{uri: user.image}}/>
-                </View>
-                <View style={styles.personalData}>
-                  <Text style={styles.title}>{user.name}</Text>
-                  <DefaultText >{user.email}</DefaultText>
-                </View>
-              </View>
-              <View>
-                <TouchableOpacity style={styles.googleCalendar}>
-                  <Image resizeMode= 'contain' style={{width: "100%", height:50}} source={require('../assets/google.png')}/>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.contactContainer}>
-                <Text style={styles.title}>Contacts</Text>
-                <FlatList 
-                  data={user.contacts}
-                  renderItem={renderContact}
-                  keyExtractor={item => item}
-                />
-              </View>
-            </View>
-        )}
+      <View style={styles.headContainer}>
+        <View style={styles.imageContainer}>
+          <Image resizeMode= 'contain' style={styles.image} source={{uri: image}}/>
+        </View>
+        <View style={styles.personalData}>
+          <Text style={styles.title}>{name} {surname}</Text>
+          <DefaultText >{email}</DefaultText>
+        </View>
+      </View>
+      <View>
+        <TouchableOpacity style={styles.googleCalendar}>
+          <Image resizeMode= 'contain' style={{width: "100%", height:50}} source={require('../assets/google.png')}/>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.contactContainer}>
+        <Text style={styles.title}>Contacts</Text>
+        <FlatList 
+          data={contacts}
+          renderItem={renderContact}
+          keyExtractor={item => item}        
+        />
+      </View>
     </View>
   );
 };
@@ -113,7 +130,7 @@ const styles = StyleSheet.create({
     height: "100%"
   },
   contacts: {
-    backgroundColor: 'white',
+    backgroundColor: Colors.backColor,
     padding: 8,
     marginVertical: 5,
     width: "100%",

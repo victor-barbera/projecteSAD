@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useState} from 'react';
 import {
   View,
   Text,
@@ -8,9 +8,22 @@ import {
 } from 'react-native';
 
 import DefaultText from './DefaultText';
+import BoldText from './BoldText';
 import Colors from '../constants/Colors';
 
 const MeetingItem = props => {
+  const result = props.result.join(', ');
+  const deleteMeeting = meetingId => {
+    return async dispatch => {
+      await fetch(
+        `https://quedades.firebaseio.com/users/${userId}/meeetings/${meetingId}.json`,
+        {
+          method: 'DELETE'
+        }
+      );
+      dispatch({type: 'DELETE_PRODUCT',pid: meetingId});
+    };
+  };
   return (
     <View style={styles.meetingItem}>
       <TouchableOpacity 
@@ -21,29 +34,39 @@ const MeetingItem = props => {
                   [{
                     text: 'Delete', 
                     style: 'destructive', 
-                    onPress: () => console.log("delete meeting")},
+                    onPress: () => {
+                      console.log(props.id)
+                      deleteMeeting(props.id)
+                    }
+                    },
                   {
                     text: 'Cancel', 
                     style: 'clear',
-                    onPress: () => console.log("cancel")}],
+                  }]
                 );
             }}
             >
         <View>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>
-              {props.title}
+              {props.concept}
             </Text>
           </View>
           <View style={styles.status}>
             <Text style={{color: Colors.primaryColor}}>
-              {props.status}
+              From: <BoldText>{props.senderID}</BoldText> 
             </Text>
+            <BoldText>{props.status}</BoldText>
           </View>
-          <View style={styles.meetingDate}>
-            <DefaultText>{props.day}</DefaultText>
-            <DefaultText style={{alignSelf: 'flex-end'}}>{props.hour}</DefaultText>
-          </View>
+          <TouchableOpacity style={styles.results} onPress={ () => {
+            Alert.alert(
+                  'Days',
+                  result,
+                  [{text: 'Okay', style: 'clear'}],
+                );
+              }}>
+            <Text style={styles.title}>Show days</Text>
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     </View>
@@ -52,19 +75,15 @@ const MeetingItem = props => {
 
 const styles = StyleSheet.create({
   meetingItem: {
+    elevation: 12,
     flex:1,
-    height: 100,
+    height: 110,
     backgroundColor: 'white',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: Colors.accentColor,
     overflow: 'hidden',
-    marginVertical: 3,
-  },
-  meetingDate: {
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    flexDirection: 'row',
+    marginVertical: 5,
   },
   titleContainer: {
     height: "50%",
@@ -77,9 +96,16 @@ const styles = StyleSheet.create({
     color: Colors.accentColor,
   },
   status: {
-    alignItems: 'flex-end',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingBottom: 10,
     paddingHorizontal: 10,
+  },
+  results: {
+    alignItems: 'center',
+    backgroundColor: Colors.backColor,
+    paddingHorizontal: 10,
+    height: 25
   }
 });
 

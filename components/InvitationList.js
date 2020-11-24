@@ -5,18 +5,14 @@ import Colors from '../constants/Colors';
 import InvitationItem from './InvitationItem';
 
 const InvitationList = props => {
-    const renderMeetingItem = itemData => {
-        return (
+    const renderMeetingItem = ({item}) => (
         <InvitationItem
-            title={itemData.item.title}
-            day={itemData.item.day}
-            hour={itemData.item.hour}
-            status={itemData.item.status}
-            admin={itemData.item.admin}
+        concept={item.concept}
+        senderID={item.senderID}
+        results={item.results}
+        id={item.id}
       />
     );
-  };
-
   return (
     <View style={styles.list}>
       <FlatList

@@ -1,16 +1,28 @@
-import React from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { StyleSheet} from 'react-native';
 import Colors from '../constants/Colors';
-import { INVITATIONS } from '../data/dummy-data';
+import { useAppContext } from '../Lib/Context';
 
 import InvitationList from '../components/InvitationList';
 
 const Invitations = props => {
-  const displayedMeetings = INVITATIONS.filter(
-    meeting => meeting.id >= 0 
-  );
+  const {userId} = useAppContext();
+  const [invitations, setInvitations] = useState([]);
+  
+  useEffect(()=>{
+    const fetchData = async ()=> {
+    const res = await fetch(
+      `https://quedades.firebaseio.com/users/${userId}/invitations.json`,
+      {method: 'GET'}
+    );
+    if(res.ok) {
+      const resData = await res.json();
+      setInvitations(resData);
+    }}
+    fetchData();
+  },[userId]);
 
-  return <InvitationList listData={displayedMeetings} navigation={props.navigation} />;
+  return <InvitationList listData={invitations} navigation={props.navigation} />;
 };
 
 Invitations.navigationOptions = () => {
@@ -19,13 +31,5 @@ Invitations.navigationOptions = () => {
   };
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.primaryColor,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default Invitations;

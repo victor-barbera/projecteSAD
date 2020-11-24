@@ -1,19 +1,31 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet} from 'react-native';
 import Colors from '../constants/Colors';
-import { MEETINGS } from '../data/dummy-data';
+import { useAppContext } from '../Lib/Context';
 
 
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { HeaderButtons, Item} from "react-navigation-header-buttons";
 import HeaderButton from '../components/HeaderButton';
 import MeetingList from '../components/MeetingList';
 
 const Home = props => {
-  const displayedMeetings = MEETINGS.filter(
-    meeting => meeting.id >= 0 
-  );
+  const {userId} = useAppContext();
+  const [meetings, setMeetings] = useState([]);
+  
+  useEffect(()=>{
+    const fetchData = async ()=> {
+    const res = await fetch(
+      `https://quedades.firebaseio.com/users/${userId}/meeetings.json`,
+      {method: 'GET'}
+    );
+    if(res.ok) {
+      const resData = await res.json();
+      setMeetings(resData);
+    }}
+    fetchData();
+  },[userId]);
 
-  return <MeetingList listData={displayedMeetings} navigation={props.navigation} />;
+  return <MeetingList listData={meetings} navigation={props.navigation} />;
 };
 
 Home.navigationOptions = navigationData => {
