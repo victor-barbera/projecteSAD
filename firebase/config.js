@@ -1,11 +1,11 @@
 const firebaseConfig = {
-  apiKey: 'AIzaSyBPxa46sAFq6dPn6O1Be9vZmyP-9UP0SZk',
-  authDomain: 'quedades.firebaseapp.com',
-  databaseURL: 'https://quedades.firebaseio.com',
-  projectId: 'quedades',
-  storageBucket: 'quedades.appspot.com',
-  messagingSenderId: '143770678559',
-  appId: '1:143770678559:ios:10bc1d0577a24569fcec2a',
+  apiKey: 'AIzaSyBp2NZuqLCYwJCUISJSmDNfoVfHzd3UaOo',
+  authDomain: 'syncrocalendars.firebaseapp.com',
+  databaseURL: 'https://syncrocalendars.firebaseio.com',
+  projectId: 'syncrocalendars',
+  storageBucket: 'syncrocalendars.appspot.com',
+  messagingSenderId: '505957339399',
+  appId: '1:505957339399:web:afacc7d81d5fdff50375a2',
   measurementId: 'G-60WKEF0SKE',
 };
 

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AppNavigator from './navigation/AppNavigator';
-import { firebase } from './firebase/config';
+import firebaseConfig from './firebase/config';
 import { AppContext } from './Lib/Context';
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
@@ -11,15 +11,51 @@ enableScreens();
 const fetchFonts = () => {
   return Font.loadAsync({
     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
-    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf')
+    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
   });
 };
 
 export default function App() {
-  const [userId, setUserId] = useState("");
-  const [user, setUser] = useState({id: "", name: "", surname: "", email: ""});
+  const [userId, setUserId] = useState('');
+  const [user, setUser] = useState({
+    id: '',
+    name: '',
+    surname: '',
+    email: '',
+  });
+  const [contacts, setContacts] = useState([]);
   const [fontLoaded, setFontLoaded] = useState(false);
-  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(
+        `${firebaseConfig.databaseURL}/users/${user.id}/contacts.json`,
+        { method: 'GET' }
+      );
+      if (res.ok) {
+        const resData = await res.json();
+        const aux = Object.keys(resData).map(item => resData[item].contactId);
+        const contactsArray = await Promise.all(aux.map(async userId => {
+          const contactInfo = await fetch(
+            `${firebaseConfig.databaseURL}/users/${userId}.json`,
+            { method: 'GET' }
+          );
+          if (contactInfo.ok) {
+            const contactData = await contactInfo.json();
+            return {
+              id: userId,
+              name: contactData.name,
+              surname: contactData.surname,
+              email: contactData.email,
+            };
+          }
+        }));
+        setContacts(contactsArray);
+      }
+    };
+    fetchData();
+  }, [user]);
+
   if (!fontLoaded) {
     return (
       <AppLoading
@@ -35,11 +71,11 @@ export default function App() {
         userId,
         setUserId,
         user,
-        setUser
+        setUser,
+        contacts,
       }}
     >
       <AppNavigator />
     </AppContext.Provider>
   );
 }
-
