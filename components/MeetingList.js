@@ -8,20 +8,17 @@ const MeetingList = props => {
   const renderMeeting = ({item}) => (
     <MeetingItem
     concept={item.concept}
-    senderID={item.senderID}
+    sender={item.sender}
+    receiver={item.receiver}
     status={item.status}
-    result={item.result}
-    id={item.id}
+    availableDays={item.availableDays}
   />        
   );
-        
-
   return (
     <View style={styles.list}>
       <FlatList 
           data={props.listData}
-          renderItem={renderMeeting}
-          keyExtractor={(item,index) => item.id}  
+          renderItem={renderMeeting}  
           style={{ width: '100%' }}      
         />
     </View>

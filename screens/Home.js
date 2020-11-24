@@ -9,26 +9,53 @@ import HeaderButton from '../components/HeaderButton';
 import MeetingList from '../components/MeetingList';
 
 const Home = props => {
-  const {userId} = useAppContext();
+  const {userId, user} = useAppContext();
   const [meetings, setMeetings] = useState([]);
   
   useEffect(()=>{
     const fetchData = async ()=> {
-    const res = await fetch(
-      `https://quedades.firebaseio.com/users/${userId}/meeetings.json`,
-      {method: 'GET'}
-    );
-    if(res.ok) {
-      const resData = await res.json();
-      setMeetings(resData);
-    }}
+      const res = await fetch(
+        `https://quedades.firebaseio.com/users/${userId}/requests.json`,
+        {method: 'GET'}
+      );
+      if(res.ok) {
+        const resData = await res.json();
+        const syncIds = Object.keys(resData).map(item => resData[item].syncId );
+        const meetingsArray = await Promise.all(syncIds.map(async syncId => {
+          const meetingsInfo = await fetch(
+            `https://quedades.firebaseio.com/requests/${syncId}.json`,
+            { method: 'GET' }
+          );
+          if (meetingsInfo.ok) {
+            const meetingsData = await meetingsInfo.json();
+            return {
+              id: syncId,
+              concept: meetingsData.concept,
+              sender: meetingsData.sender,
+              receiver: meetingsData.receiver,
+              status: meetingsData.status,
+            };
+          }
+        }));
+        setMeetings(meetingsArray);
+      }
+    }
     fetchData();
-  },[userId]);
+    
+    //console.log(invitations);
+    
+    },[userId]);
+    useEffect(()=>{
+      const receiver = `${user.name} ${user.surname}`;
+    const invitations =  meetings.filter(meeting => meeting.receiver === receiver);
+      props.navigation.setParams({meetings: invitations});
+    },[meetings])
 
   return <MeetingList listData={meetings} navigation={props.navigation} />;
 };
 
 Home.navigationOptions = navigationData => {
+  const meetings = navigationData.navigation.getParam('meetings');
   return {
     headerTitle: "HOME",
     headerRight: () =>
@@ -38,9 +65,10 @@ Home.navigationOptions = navigationData => {
           iconName="ios-notifications-outline"
           color={Colors.accentColor}
           onPress={() => {
-            navigationData.navigation.navigate({
-              routeName: 'Invitations',
-            });
+            navigationData.navigation.navigate(
+              'Invitations',
+              {invitations: meetings}
+            );
          }}
         />
       </HeaderButtons>

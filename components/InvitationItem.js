@@ -10,16 +10,15 @@ import {
 import Colors from '../constants/Colors';
 
 const InvitationItem = props => {
-  const results = props.results.join(', ');
   return (
     <View style={styles.meetingItem}>
       <TouchableOpacity 
               onLongPress={() => {
                 Alert.alert(
                   'Confirm meeting',
-                  'Choose go to select your disponibility',
+                  'Choose accept to select your disponibility',
                   [{
-                    text: 'Go', //aqui sha de obrir el modal per respondre
+                    text: 'Accept', //aqui sha de obrir el modal per respondre
                     style: 'clear',
                     onPress: () => console.log("accept meeting")
                   },
@@ -43,18 +42,9 @@ const InvitationItem = props => {
           </View>
           <View style={styles.status}>
             <Text style={{color: Colors.primaryColor}}>
-              From: <Text style={{fontFamily: 'open-sans-bold'}}>{props.senderID}</Text> 
+              From: <Text style={{fontFamily: 'open-sans-bold'}}>{props.sender}</Text> 
             </Text>
           </View>
-          <TouchableOpacity style={styles.results} onPress={ () => {
-            Alert.alert(
-                  'Days',
-                  results,
-                  [{text: 'Okay', style: 'clear'}],
-                );
-              }}>
-            <Text style={styles.title}>Show days</Text>
-          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     </View>

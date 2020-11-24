@@ -6,22 +6,7 @@ import { useAppContext } from '../Lib/Context';
 import InvitationList from '../components/InvitationList';
 
 const Invitations = props => {
-  const {userId} = useAppContext();
-  const [invitations, setInvitations] = useState([]);
-  
-  useEffect(()=>{
-    const fetchData = async ()=> {
-    const res = await fetch(
-      `https://quedades.firebaseio.com/users/${userId}/invitations.json`,
-      {method: 'GET'}
-    );
-    if(res.ok) {
-      const resData = await res.json();
-      setInvitations(resData);
-    }}
-    fetchData();
-  },[userId]);
-
+  const invitations = props.navigation.getParam('invitations');
   return <InvitationList listData={invitations} navigation={props.navigation} />;
 };
 

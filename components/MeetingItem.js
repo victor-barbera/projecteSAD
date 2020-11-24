@@ -12,18 +12,7 @@ import BoldText from './BoldText';
 import Colors from '../constants/Colors';
 
 const MeetingItem = props => {
-  const result = props.result.join(', ');
-  const deleteMeeting = meetingId => {
-    return async dispatch => {
-      await fetch(
-        `https://quedades.firebaseio.com/users/${userId}/meeetings/${meetingId}.json`,
-        {
-          method: 'DELETE'
-        }
-      );
-      dispatch({type: 'DELETE_PRODUCT',pid: meetingId});
-    };
-  };
+  //const result = props.availableDays.join(', ');
   return (
     <View style={styles.meetingItem}>
       <TouchableOpacity 
@@ -35,8 +24,6 @@ const MeetingItem = props => {
                     text: 'Delete', 
                     style: 'destructive', 
                     onPress: () => {
-                      console.log(props.id)
-                      deleteMeeting(props.id)
                     }
                     },
                   {
@@ -54,14 +41,14 @@ const MeetingItem = props => {
           </View>
           <View style={styles.status}>
             <Text style={{color: Colors.primaryColor}}>
-              From: <BoldText>{props.senderID}</BoldText> 
+              To: <BoldText>{props.receiver}</BoldText> 
             </Text>
             <BoldText>{props.status}</BoldText>
           </View>
           <TouchableOpacity style={styles.results} onPress={ () => {
             Alert.alert(
                   'Days',
-                  result,
+                  'result',
                   [{text: 'Okay', style: 'clear'}],
                 );
               }}>
