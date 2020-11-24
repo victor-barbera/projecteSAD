@@ -14,7 +14,7 @@ const User = () => {
 
   const renderContact = ({item}) => (
     <View style={styles.contacts}>
-      <DefaultText>{item}</DefaultText>
+      <DefaultText>{`${item.name} ${item.surname}`}</DefaultText>
     </View>
   );
 
@@ -39,7 +39,6 @@ const User = () => {
         <FlatList 
           data={contacts}
           renderItem={renderContact}
-          keyExtractor={item => item}        
         />
       </View>
     </View>

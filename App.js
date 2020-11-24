@@ -17,12 +17,12 @@ const fetchFonts = () => {
 
 export default function App() {
   const [userId, setUserId] = useState('');
-  const [user, setUser] = useState({
+  const [user, setUser] = useState();/*{
     id: '',
     name: '',
     surname: '',
     email: '',
-  });
+  });*/
   const [contacts, setContacts] = useState([]);
   const [fontLoaded, setFontLoaded] = useState(false);
 
@@ -34,6 +34,7 @@ export default function App() {
       );
       if (res.ok) {
         const resData = await res.json();
+        console.log(resData);
         const aux = Object.keys(resData).map(item => resData[item].contactId);
         const contactsArray = await Promise.all(aux.map(async userId => {
           const contactInfo = await fetch(
@@ -53,7 +54,7 @@ export default function App() {
         setContacts(contactsArray);
       }
     };
-    fetchData();
+    if(user)fetchData();
   }, [user]);
 
   if (!fontLoaded) {

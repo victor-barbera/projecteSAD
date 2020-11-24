@@ -26,6 +26,7 @@ const Form = props => {
   };
 
   const sendSyncRequest = async data => {
+    const contact = contacts.find(contact => contact.email === data.contact || `${contact.name} ${contact.surname}` === data.contact);
     const res = await fetch(
       `${firebaseConfig.databaseURL}/requests.json`,
       {
@@ -35,17 +36,18 @@ const Form = props => {
         },
         body: JSON.stringify({
           sender: `${user.name} ${user.surname}`,
-          receiver: data.contact,
+          receiver: contact.name,
           concept: data.concept,
           availableDays: data.availableDays,
           status: 'pending',
+          time: data.time
         }),
       }
     );
     if (res.ok) {
       const response = await res.json();
-      const contact = contacts.find(contact => contact.email === data.contact);
       const destRes = await fetch(
+
         `${firebaseConfig.databaseURL}/users/${contact.id}/requests.json`,
         {
           method: 'POST',
