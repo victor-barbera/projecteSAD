@@ -6,13 +6,11 @@ import {
   TouchableOpacity,
   Alert
 } from 'react-native';
-
-import DefaultText from './DefaultText';
+import StatusText from './StatusText';
 import BoldText from './BoldText';
 import Colors from '../constants/Colors';
 
 const MeetingItem = props => {
-  //const result = props.availableDays.join(', ');
   return (
     <View style={styles.meetingItem}>
       <TouchableOpacity 
@@ -23,8 +21,7 @@ const MeetingItem = props => {
                   [{
                     text: 'Delete', 
                     style: 'destructive', 
-                    onPress: () => {
-                    }
+                    onPress: () => { console.log('Delete item')}
                     },
                   {
                     text: 'Cancel', 
@@ -38,22 +35,18 @@ const MeetingItem = props => {
             <Text style={styles.title}>
               {props.concept}
             </Text>
+            <Text>When: {props.time}</Text>
           </View>
           <View style={styles.status}>
-            <Text style={{color: Colors.primaryColor}}>
-              To: <BoldText>{props.receiver}</BoldText> 
-            </Text>
+            <StatusText sender={props.sender} receiver={props.receiver} status={props.status} />
             <BoldText>{props.status}</BoldText>
           </View>
-          <TouchableOpacity style={styles.results} onPress={ () => {
-            Alert.alert(
-                  'Days',
-                  'result',
-                  [{text: 'Okay', style: 'clear'}],
-                );
-              }}>
+          {props.status === 'solved' && 
+          <TouchableOpacity style={styles.results} onPress={ () => 
+            {props.result ? Alert.alert("😁","The matching dates are: " + props.result) :  Alert.alert("😢","No matching dates found")}
+              }>
             <Text style={styles.title}>Show days</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>}
         </View>
       </TouchableOpacity>
     </View>

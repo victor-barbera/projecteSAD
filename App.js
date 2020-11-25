@@ -17,6 +17,7 @@ const fetchFonts = () => {
 
 export default function App() {
   const [userId, setUserId] = useState('');
+  const [refresh, setRefresh] = useState(false);
   const [user, setUser] = useState();/*{
     id: '',
     name: '',
@@ -74,6 +75,8 @@ export default function App() {
         user,
         setUser,
         contacts,
+        refresh,
+        setRefresh
       }}
     >
       <AppNavigator />

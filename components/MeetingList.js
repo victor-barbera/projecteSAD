@@ -11,7 +11,8 @@ const MeetingList = props => {
     sender={item.sender}
     receiver={item.receiver}
     status={item.status}
-    availableDays={item.availableDays}
+    result={item.result}
+    time={item.time}
   />        
   );
   return (

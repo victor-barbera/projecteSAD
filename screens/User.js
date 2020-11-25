@@ -9,20 +9,19 @@ import HeaderButton from '../components/HeaderButton';
 
 const User = () => {
   const { user, contacts } = useAppContext();
-  const [image, setImage] = useState("");
-
+  const image = "https://png.pngitem.com/pimgs/s/130-1300380_female-user-image-icon-hd-png-download.png";
 
   const renderContact = ({item}) => (
     <View style={styles.contacts}>
       <DefaultText>{`${item.name} ${item.surname}`}</DefaultText>
     </View>
   );
-
+  //console.log(image);
   return (
     <View style={styles.container}>
       <View style={styles.headContainer}>
         <View style={styles.imageContainer}>
-          <Image resizeMode= 'contain' style={styles.image} source={{uri: image}}/>
+          <Image resizeMode= 'contain' style={styles.image} source={{uri: user.image ? user.image : image}}/>
         </View>
         <View style={styles.personalData}>
           <Text style={styles.title}>{user.name} {user.surname}</Text>

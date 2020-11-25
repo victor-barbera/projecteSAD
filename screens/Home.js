@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet} from 'react-native';
 import Colors from '../constants/Colors';
 import { useAppContext } from '../Lib/Context';
+import firebaseConfig from '../firebase/config';
 
 
 import { HeaderButtons, Item} from "react-navigation-header-buttons";
@@ -11,11 +11,12 @@ import MeetingList from '../components/MeetingList';
 const Home = props => {
   const {userId, user} = useAppContext();
   const [meetings, setMeetings] = useState([]);
-  
+  const myuser = `${user.name} ${user.surname}`;
+
   useEffect(()=>{
     const fetchData = async ()=> {
       const res = await fetch(
-        `https://quedades.firebaseio.com/users/${userId}/requests.json`,
+        `${firebaseConfig.databaseURL}/users/${userId}/requests.json`,
         {method: 'GET'}
       );
       if(res.ok) {
@@ -23,7 +24,7 @@ const Home = props => {
         const syncIds = Object.keys(resData).map(item => resData[item].syncId );
         const meetingsArray = await Promise.all(syncIds.map(async syncId => {
           const meetingsInfo = await fetch(
-            `https://quedades.firebaseio.com/requests/${syncId}.json`,
+            `${firebaseConfig.databaseURL}/requests/${syncId}.json`,
             { method: 'GET' }
           );
           if (meetingsInfo.ok) {
@@ -34,6 +35,9 @@ const Home = props => {
               sender: meetingsData.sender,
               receiver: meetingsData.receiver,
               status: meetingsData.status,
+              time: meetingsData.time,
+              result: meetingsData.result,
+              availableDays: meetingsData.availableDays
             };
           }
         }));
@@ -41,17 +45,21 @@ const Home = props => {
       }
     }
     fetchData();
-    
-    //console.log(invitations);
-    
     },[userId]);
-    useEffect(()=>{
-      const receiver = `${user.name} ${user.surname}`;
-    const invitations =  meetings.filter(meeting => meeting.receiver === receiver);
-      props.navigation.setParams({meetings: invitations});
-    },[meetings])
 
-  return <MeetingList listData={meetings} navigation={props.navigation} />;
+    useEffect(()=>{
+      const invitations =  meetings.filter((meeting)=>{
+        return meeting.receiver === myuser && meeting.status === 'pending' ;
+      });
+      props.navigation.setParams({meetings: invitations});
+    },[meetings]);
+
+    const mymeetings = meetings.sort((a, b) => b.status < a.status ? 1: -1).filter((meeting)=>{
+      return meeting.sender === myuser || meeting.status === 'solved' ;
+    });
+
+
+  return <MeetingList listData={mymeetings} navigation={props.navigation} />;
 };
 
 Home.navigationOptions = navigationData => {
@@ -71,17 +79,17 @@ Home.navigationOptions = navigationData => {
             );
          }}
         />
+      </HeaderButtons>,
+      headerLeft: () =>
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Refresh"
+          iconName="ios-sync"
+          color={Colors.accentColor}
+          onPress={() => {}}
+        />
       </HeaderButtons>
   };
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.primaryColor,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default Home;
