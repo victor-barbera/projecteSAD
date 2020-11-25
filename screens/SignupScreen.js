@@ -33,7 +33,6 @@ const SignupScreen = props => {
       }
     );
     const authResData = await authRes.json();
-    console.log(authResData);
     if (authResData.error) {
       if (authResData.error.message === 'EMAIL_EXISTS')
         setErrorMsg("The email you're using is already registered!🤯");

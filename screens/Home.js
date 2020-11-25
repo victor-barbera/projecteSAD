@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { StyleSheet} from 'react-native';
 import Colors from '../constants/Colors';
 import { useAppContext } from '../Lib/Context';
+import firebaseConfig from '../firebase/config';
 
 
 import { HeaderButtons, Item} from "react-navigation-header-buttons";
@@ -15,7 +16,7 @@ const Home = props => {
   useEffect(()=>{
     const fetchData = async ()=> {
       const res = await fetch(
-        `https://quedades.firebaseio.com/users/${userId}/requests.json`,
+        `${firebaseConfig.databaseURL}/users/${userId}/requests.json`,
         {method: 'GET'}
       );
       if(res.ok) {
@@ -23,7 +24,7 @@ const Home = props => {
         const syncIds = Object.keys(resData).map(item => resData[item].syncId );
         const meetingsArray = await Promise.all(syncIds.map(async syncId => {
           const meetingsInfo = await fetch(
-            `https://quedades.firebaseio.com/requests/${syncId}.json`,
+            `${firebaseConfig.databaseURL}/requests/${syncId}.json`,
             { method: 'GET' }
           );
           if (meetingsInfo.ok) {
@@ -34,6 +35,9 @@ const Home = props => {
               sender: meetingsData.sender,
               receiver: meetingsData.receiver,
               status: meetingsData.status,
+              time: meetingsData.time,
+              result: meetingsData.result,
+              availableDays: meetingsData.availableDays,
             };
           }
         }));
@@ -42,7 +46,7 @@ const Home = props => {
     }
     fetchData();
     
-    //console.log(invitations);
+
     
     },[userId]);
     useEffect(()=>{

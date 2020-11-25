@@ -13,7 +13,6 @@ const SigninScreen = props => {
   const { control, handleSubmit, errors } = useForm();
   const [errorMsg, setErrorMsg] = useState('');
   const onSubmit = async data => {
-    console.log(data);
     const response = await fetch(
       `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${firebaseConfig.apiKey}`,
       {

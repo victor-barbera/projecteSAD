@@ -1,59 +1,66 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Alert
-} from 'react-native';
-
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import SyncModal from './SyncModal';
 import Colors from '../constants/Colors';
 
 const InvitationItem = props => {
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
-    <View style={styles.meetingItem}>
-      <TouchableOpacity 
-              onLongPress={() => {
-                Alert.alert(
-                  'Confirm meeting',
-                  'Choose accept to select your disponibility',
-                  [{
-                    text: 'Accept', //aqui sha de obrir el modal per respondre
-                    style: 'clear',
-                    onPress: () => console.log("accept meeting")
-                  },
-                  {
-                    text: 'Decline', 
-                    style: 'destructive', 
-                    onPress: () => console.log("delete meeting")},
-                  {
-                    text: 'Cancel', 
-                    style: 'cancel',
-                  },
-                  ],
-                );
-            }}
-            >
-        <View>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>
-              {props.concept}
-            </Text>
+    <>
+      <View style={styles.meetingItem}>
+        <TouchableOpacity
+          onLongPress={() => {
+            Alert.alert(
+              'Confirm meeting',
+              'Choose accept to select your disponibility',
+              [
+                {
+                  text: 'Accept', //aqui sha de obrir el modal per respondre
+                  onPress: () => setModalVisible(true),
+                },
+                {
+                  text: 'Cancel',
+                },
+              ]
+            );
+          }}
+        >
+          <View>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>{props.concept}</Text>
+            </View>
+            <View style={styles.info}>
+              <Text style={{ color: Colors.primaryColor }} multiline={true}>
+                From:{' '}
+                <Text style={{ fontFamily: 'open-sans-bold' }}>
+                  {props.sender}
+                </Text>
+              </Text>
+              <Text style={{ color: Colors.primaryColor }} multiline={true}>
+                When:{' '}
+                <Text style={{ fontFamily: 'open-sans-bold' }}>
+                  {props.time}
+                </Text>
+              </Text>
+            </View>
           </View>
-          <View style={styles.status}>
-            <Text style={{color: Colors.primaryColor}}>
-              From: <Text style={{fontFamily: 'open-sans-bold'}}>{props.sender}</Text> 
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    </View>
+        </TouchableOpacity>
+      </View>
+      <SyncModal
+        isVisible={modalVisible}
+        setVisibility={setModalVisible}
+        action="Accept"
+        syncId={props.id}
+        availableDays={props.availableDays}
+      />
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   meetingItem: {
-    flex:1,
+    flex: 1,
     height: 110,
     backgroundColor: 'white',
     borderRadius: 10,
@@ -63,7 +70,7 @@ const styles = StyleSheet.create({
     marginVertical: 3,
   },
   titleContainer: {
-    height: "50%",
+    height: '50%',
     paddingVertical: 5,
     paddingHorizontal: 10,
   },
@@ -76,11 +83,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.backColor,
     paddingHorizontal: 10,
-    height: 25
+    height: 25,
   },
-  status: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  info: {
+    //justifyContent: 'space-between',
     paddingBottom: 10,
     paddingHorizontal: 10,
   },
