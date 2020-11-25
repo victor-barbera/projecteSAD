@@ -13,7 +13,7 @@ const SyncButton = props => {
           <AntDesign name="sync" size={24} color="white" />
         </View>
       </TouchableWithoutFeedback>
-      <SyncModal isVisible={modalVisible} setVisibility={setModalVisible} />
+      <SyncModal isVisible={modalVisible} setVisibility={setModalVisible} action="Send" />
     </>
   );
 };

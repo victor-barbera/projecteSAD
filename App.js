@@ -17,13 +17,7 @@ const fetchFonts = () => {
 
 export default function App() {
   const [userId, setUserId] = useState('');
-  const [refresh, setRefresh] = useState(false);
-  const [user, setUser] = useState();/*{
-    id: '',
-    name: '',
-    surname: '',
-    email: '',
-  });*/
+  const [user, setUser] = useState(null);
   const [contacts, setContacts] = useState([]);
   const [fontLoaded, setFontLoaded] = useState(false);
 
@@ -35,27 +29,28 @@ export default function App() {
       );
       if (res.ok) {
         const resData = await res.json();
-        console.log(resData);
         const aux = Object.keys(resData).map(item => resData[item].contactId);
-        const contactsArray = await Promise.all(aux.map(async userId => {
-          const contactInfo = await fetch(
-            `${firebaseConfig.databaseURL}/users/${userId}.json`,
-            { method: 'GET' }
-          );
-          if (contactInfo.ok) {
-            const contactData = await contactInfo.json();
-            return {
-              id: userId,
-              name: contactData.name,
-              surname: contactData.surname,
-              email: contactData.email,
-            };
-          }
-        }));
+        const contactsArray = await Promise.all(
+          aux.map(async userId => {
+            const contactInfo = await fetch(
+              `${firebaseConfig.databaseURL}/users/${userId}.json`,
+              { method: 'GET' }
+            );
+            if (contactInfo.ok) {
+              const contactData = await contactInfo.json();
+              return {
+                id: userId,
+                name: contactData.name,
+                surname: contactData.surname,
+                email: contactData.email,
+              };
+            }
+          })
+        );
         setContacts(contactsArray);
       }
     };
-    if(user)fetchData();
+    if (user) fetchData();
   }, [user]);
 
   if (!fontLoaded) {
@@ -75,8 +70,6 @@ export default function App() {
         user,
         setUser,
         contacts,
-        refresh,
-        setRefresh
       }}
     >
       <AppNavigator />

@@ -1,12 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Modal from 'react-native-modal';
 import Colors from '../constants/Colors';
-import Form from './form/Form';
+import SendSyncForm from './form/SendSyncForm';
+import ReplySyncForm from './form/ReplySyncForm';
 
-const windowHeight = Dimensions.get('window').height;
 
 const SyncModal = props => {
+  let FormComp;
+  if(props.action === "Send") FormComp = SendSyncForm;
+  else FormComp = ReplySyncForm;
+
   return (
     <Modal
       backdropOpacity={0.15}
@@ -16,8 +20,8 @@ const SyncModal = props => {
       avoidKeyboard={true}
     >
       <View style={styles.content}>
-        <Text style={styles.contentTitle}>Send a sync🔄 request</Text>
-        <Form setModalVisibility={props.setVisibility} />
+        <Text style={styles.contentTitle}>{props.action} a sync🔄 request</Text>
+        <FormComp setModalVisibility={props.setVisibility} {...props} />
       </View>
     </Modal>
   );

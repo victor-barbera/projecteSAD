@@ -14,7 +14,7 @@ import { useAppContext } from '../../Lib/Context';
 import firebaseConfig from '../../firebase/config';
 
 
-const Form = props => {
+const SendSyncForm = props => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
   const { control, handleSubmit, errors } = useForm();
@@ -36,7 +36,7 @@ const Form = props => {
         },
         body: JSON.stringify({
           sender: `${user.name} ${user.surname}`,
-          receiver: contact.name,
+          receiver: `${contact.name} ${contact.surname}`,
           concept: data.concept,
           availableDays: data.availableDays,
           status: 'pending',
@@ -219,4 +219,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Form;
+export default SendSyncForm;

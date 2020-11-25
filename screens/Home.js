@@ -37,7 +37,7 @@ const Home = props => {
               status: meetingsData.status,
               time: meetingsData.time,
               result: meetingsData.result,
-              availableDays: meetingsData.availableDays
+              availableDays: meetingsData.availableDays,
             };
           }
         }));

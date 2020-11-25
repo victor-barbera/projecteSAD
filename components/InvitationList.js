@@ -12,6 +12,8 @@ const InvitationList = props => {
         receiver={item.receiver}
         status={item.status}
         availableDays={item.availableDays}
+        time={item.time}
+        id={item.id}
       />
     );
   return (
