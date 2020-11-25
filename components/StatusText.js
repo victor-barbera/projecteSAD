@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
 import Colors  from '../constants/Colors';
-import BoldText from './BoldText';
 import { useAppContext } from '../Lib/Context';
 
 const StatusText = props => {
@@ -10,20 +9,21 @@ const StatusText = props => {
     if(props.sender == myuser){
         return (
         <Text style={styles.text}>
-          To: <BoldText>{props.receiver}</BoldText> 
+          To: <Text style={{ fontFamily: 'open-sans-bold' }}>{props.receiver}</Text> 
         </Text>
         );
       }
     return (
         <Text style={styles.text}>
-          From: <BoldText>{props.sender}</BoldText> 
+          From: <Text style={{ fontFamily: 'open-sans-bold' }} >{props.sender}</Text> 
         </Text>    
         );
 };
 
 const styles = StyleSheet.create({
   text: {
-    color: Colors.primaryColor,
+    color: Colors.accentColor,
+    fontSize: 13
   }
 });
 

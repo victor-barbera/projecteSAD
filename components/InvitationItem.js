@@ -37,7 +37,7 @@ const InvitationItem = props => {
                   {props.sender}
                 </Text>
               </Text>
-              <Text style={{ color: Colors.primaryColor }} multiline={true}>
+              <Text style={{ color: Colors.accentColor }} multiline={true}>
                 When:{' '}
                 <Text style={{ fontFamily: 'open-sans-bold' }}>
                   {props.time}
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'open-sans-bold',
-    fontSize: 15,
+    fontSize: 17,
     color: Colors.accentColor,
   },
   results: {
