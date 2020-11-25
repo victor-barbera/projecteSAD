@@ -1,8 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import Colors from '../constants/Colors';
-import { useAppContext } from '../Lib/Context';
-
+import React from 'react';
 import InvitationList from '../components/InvitationList';
 
 const Invitations = props => {

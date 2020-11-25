@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, StyleSheet,Text } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import Colors from '../constants/Colors';
 
 import MeetingItem from './MeetingItem';

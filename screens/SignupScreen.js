@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Text,
-  View,
-  Button,
-  StyleSheet,
-} from 'react-native';
+import { Text, View, Button, StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import FormInput from '../components/form/FormInput';
 import FormButton from '../components/form/FormButton';
@@ -49,13 +44,18 @@ const SignupScreen = props => {
           body: JSON.stringify({
             name: data.name,
             surname: data.surname,
-            email: data.email
+            email: data.email,
           }),
         }
       );
       if (rtdbRes.ok) {
         setUserId(authResData.localId);
-        setUser({id: authResData.localId, name: data.name, surname: data.surname, email: data.email});
+        setUser({
+          id: authResData.localId,
+          name: data.name,
+          surname: data.surname,
+          email: data.email,
+        });
         props.navigation.navigate('App');
       }
     }
@@ -129,7 +129,7 @@ const SignupScreen = props => {
             <FormInput
               onChangeText={value => onChange(value)}
               value={value}
-              placeholder='Write your first name'
+              placeholder="Write your first name"
             />
           )}
         />
@@ -150,7 +150,7 @@ const SignupScreen = props => {
             <FormInput
               onChangeText={value => onChange(value)}
               value={value}
-              placeholder='Write your second name'
+              placeholder="Write your second name"
             />
           )}
         />

@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { Text, View, StyleSheet, Button, Image, Alert } from 'react-native';
+import React from 'react';
+import { Text, View, StyleSheet, Alert } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import FormInput from './FormInput';
 import FormButton from './FormButton';
-import FormStepIndicator from './FormStepIndicator';
 import { useAppContext } from '../../Lib/Context';
 import firebaseConfig from '../../firebase/config';
 

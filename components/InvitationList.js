@@ -1,21 +1,20 @@
 import React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import Colors from '../constants/Colors';
-
 import InvitationItem from './InvitationItem';
 
 const InvitationList = props => {
-    const renderMeetingItem = ({item}) => (
-        <InvitationItem
-        concept={item.concept}
-        sender={item.sender}
-        receiver={item.receiver}
-        status={item.status}
-        availableDays={item.availableDays}
-        time={item.time}
-        id={item.id}
-      />
-    );
+  const renderMeetingItem = ({ item }) => (
+    <InvitationItem
+      concept={item.concept}
+      sender={item.sender}
+      receiver={item.receiver}
+      status={item.status}
+      availableDays={item.availableDays}
+      time={item.time}
+      id={item.id}
+    />
+  );
   return (
     <View style={styles.list}>
       <FlatList
@@ -33,8 +32,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 15,
-    backgroundColor: Colors.primaryColor
-  }
+    backgroundColor: Colors.primaryColor,
+  },
 });
 
 export default InvitationList;
